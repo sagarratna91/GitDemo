@@ -12,7 +12,13 @@ tri.set_values(10, 10);
 
 System.out.println("Area of rectangle "+rec.area() );
 System.out.println("Area of rectangle "+tri.area() );
-		
+System.out.println("sagar ratnaparakhe");
+System.out.println("sagar ratnaparakhe added again");
+System.out.println("sagar ratnaparakhe2");
+System.out.println("sagar ratnaparakhe added again2");	
+
+System.out.println("sagar ratnaparakhe3");
+System.out.println("sagar ratnaparakhe added again3");		
 	}
 
 }
