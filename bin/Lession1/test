@@ -1,0 +1,5 @@
+Map<String, Object> result = new HashMap<>();
+            result.put("value1", var1);
+            result.put("value2", var2);
+            result.put("isEqual", isEqual);
+            return result;
