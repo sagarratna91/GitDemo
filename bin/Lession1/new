@@ -1,1 +1,62 @@
-test updated 1
+import java.util.Objects;
+
+public class VariableComparator {
+
+    public static ComparisonResult compare(Object var1, Object var2) {
+        // Check if both variables are either String or Double
+        if ((var1 instanceof String || var1 instanceof Double) && (var2 instanceof String || var2 instanceof Double)) {
+            boolean isEqual = Objects.equals(var1, var2);
+            return new ComparisonResult(var1, var2, isEqual);
+        } else {
+            throw new IllegalArgumentException("Both variables must be of type String or Double.");
+        }
+    }
+
+    public static void main(String[] args) {
+        // Example usage
+        ComparisonResult result1 = compare("Hello", "Hello");
+        System.out.println(result1);
+
+        ComparisonResult result2 = compare(12.5, 12.5);
+        System.out.println(result2);
+
+        ComparisonResult result3 = compare("Test", 12.5);
+        System.out.println(result3);
+
+        ComparisonResult result4 = compare("Hello", "World");
+        System.out.println(result4);
+    }
+}
+
+class ComparisonResult {
+    private final Object value1;
+    private final Object value2;
+    private final boolean isEqual;
+
+    public ComparisonResult(Object value1, Object value2, boolean isEqual) {
+        this.value1 = value1;
+        this.value2 = value2;
+        this.isEqual = isEqual;
+    }
+
+    public Object getValue1() {
+        return value1;
+    }
+
+    public Object getValue2() {
+        return value2;
+    }
+
+    public boolean isEqual() {
+        return isEqual;
+    }
+
+    @Override
+    public String toString() {
+        return "ComparisonResult{" +
+                "value1=" + value1 +
+                ", value2=" + value2 +
+                ", isEqual=" + isEqual +
+                '}';
+    }
+}
