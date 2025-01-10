@@ -1,0 +1,26 @@
+import com.mongodb.client.*;
+import org.bson.Document;
+
+public class MongoDBConnectionExample {
+    public static void main(String[] args) {
+        // MongoDB connection details
+        String uri = "mongodb://localhost:27017"; // Replace with your MongoDB URI
+        String databaseName = "testDatabase";    // Replace with your database name
+
+        // Connecting to MongoDB
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            // Access the database
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+
+            // Print a success message
+            System.out.println("Connected to MongoDB successfully!");
+
+            // List all collections in the database
+            for (String collectionName : database.listCollectionNames()) {
+                System.out.println("Collection: " + collectionName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
