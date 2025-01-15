@@ -11,3 +11,93 @@ public class OracleBackupManager {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
 }
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class OracleBackupManager {
+    // Existing code...
+
+    public static void backupTable(String tableName) {
+        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String backupTableName = tableName + "_backup_" + timestamp;
+        String sql = "CREATE TABLE " + backupTableName + " AS SELECT * FROM " + tableName;
+
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+            System.out.println("Backup created: " + backupTableName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class OracleBackupManager {
+    // Existing code...
+
+    public static void manageBackups(String tableName) {
+        List<String> backups = new ArrayList<>();
+        String prefix = tableName + "_backup_";
+
+        String sql = "SELECT table_name FROM user_tables WHERE table_name LIKE '" + prefix.toUpperCase() + "%'";
+
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                backups.add(rs.getString("table_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Sort backups to identify the oldest one
+        Collections.sort(backups);
+
+        // If more than two backups exist, delete the oldest one
+        if (backups.size() > 2) {
+            String oldestBackup = backups.get(0);
+            String dropSql = "DROP TABLE " + oldestBackup;
+
+            try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate(dropSql);
+                System.out.println("Deleted old backup: " + oldestBackup);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+
+
+
+
+public class OracleBackupManager {
+    // Existing code...
+
+    public static void backupAndManage(String tableName) {
+        backupTable(tableName);
+        manageBackups(tableName);
+    }
+
+    public static void main(String[] args) {
+        String tableName = "YOUR_TABLE_NAME"; // Replace with your table name
+        backupAndManage(tableName);
+    }
+}
+
+
+
+
