@@ -1,0 +1,57 @@
+import java.util.*;
+
+public class RagValueProcessor {
+
+    public static void main(String[] args) {
+        Integer rag3 = 3;  // Example value
+        Integer rag6 = 6;  // Example value
+        Integer rag12 = null; // Example value
+
+        Integer val3 = 30; // Associated value for rag3
+        Integer val6 = 60; // Associated value for rag6
+        Integer val12 = 120; // Associated value for rag12
+
+        // Calculate the result
+        double result = processRagsAndValues(rag3, rag6, rag12, val3, val6, val12);
+
+        // Print the result
+        System.out.println("The calculated average is: " + result);
+    }
+
+    public static double processRagsAndValues(Integer rag3, Integer rag6, Integer rag12,
+                                              Integer val3, Integer val6, Integer val12) {
+        // Map to store rag values and their associated values
+        Map<Integer, Integer> ragValueMap = new HashMap<>();
+
+        // Add non-null rag-value pairs to the map
+        if (rag3 != null) ragValueMap.put(rag3, val3);
+        if (rag6 != null) ragValueMap.put(rag6, val6);
+        if (rag12 != null) ragValueMap.put(rag12, val12);
+
+        // Extract keys (rag values) and sort them in ascending order
+        List<Integer> sortedRags = new ArrayList<>(ragValueMap.keySet());
+        Collections.sort(sortedRags);
+
+        // Check if the smallest rag value is repeated
+        Integer topRag = sortedRags.get(0);
+        long count = sortedRags.stream().filter(rag -> rag.equals(topRag)).count();
+
+        double average;
+        if (count > 1) {
+            // Average out the values associated with the repeated top rag
+            average = sortedRags.stream()
+                    .filter(rag -> rag.equals(topRag))
+                    .mapToInt(ragValueMap::get)
+                    .average()
+                    .orElse(0.0);
+        } else {
+            // Average out all the associated values
+            average = sortedRags.stream()
+                    .mapToInt(ragValueMap::get)
+                    .average()
+                    .orElse(0.0);
+        }
+
+        return average;
+    }
+}
