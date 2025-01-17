@@ -1,0 +1,52 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class StabValueProcessor {
+
+    public static void main(String[] args) {
+        // Input
+        Integer stab3 = 4, stab6 = 3, stab12 = 3;
+        int val3 = 20, val6 = 45, val12 = 37;
+
+        // List to store all stab-value pairs
+        List<Pair> stabValueList = new ArrayList<>();
+        if (stab3 != null) stabValueList.add(new Pair(stab3, val3));
+        if (stab6 != null) stabValueList.add(new Pair(stab6, val6));
+        if (stab12 != null) stabValueList.add(new Pair(stab12, val12));
+
+        // Group by stab and keep the maximum val for duplicates
+        Map<Integer, Integer> processedMap = stabValueList.stream()
+                .collect(Collectors.toMap(
+                        Pair::getStab,
+                        Pair::getVal,
+                        Math::max // Keep the maximum value if duplicate keys exist
+                ));
+
+        // Sort the map by stab values in ascending order
+        List<Map.Entry<Integer, Integer>> sortedList = new ArrayList<>(processedMap.entrySet());
+        sortedList.sort(Map.Entry.comparingByKey()); // Ascending order by stab values
+
+        // Output the first value from the sorted list
+        Map.Entry<Integer, Integer> result = sortedList.get(0);
+        System.out.println("Selected Pair: (" + result.getKey() + ", " + result.getValue() + ")");
+    }
+
+    // Pair class to represent stab-value pairs
+    static class Pair {
+        private final int stab;
+        private final int val;
+
+        public Pair(int stab, int val) {
+            this.stab = stab;
+            this.val = val;
+        }
+
+        public int getStab() {
+            return stab;
+        }
+
+        public int getVal() {
+            return val;
+        }
+    }
+}
