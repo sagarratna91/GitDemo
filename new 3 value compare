@@ -1,0 +1,46 @@
+import java.util.*;
+
+public class StabilityProcessor {
+    public static void main(String[] args) {
+        // Example input values
+        Integer stab3 = 2, stab6 = 4, stab12 = 2;  // Can be null or 1-6
+        Integer val3 = 30, val6 = 40, val12 = 20;  // Associated integer values
+
+        // Call the method to get the result
+        int result = processStabilities(stab3, val3, stab6, val6, stab12, val12);
+        System.out.println("Result: " + result);
+    }
+
+    public static int processStabilities(Integer stab3, Integer val3, Integer stab6, Integer val6, Integer stab12, Integer val12) {
+        // Step 1: Create a map of non-null stab values and their associated val values
+        Map<Integer, Integer> stabValMap = new HashMap<>();
+        if (stab3 != null) stabValMap.put(stab3, val3);
+        if (stab6 != null) stabValMap.put(stab6, val6);
+        if (stab12 != null) stabValMap.put(stab12, val12);
+
+        // Step 2: Get the list of stab values and sort them in ascending order
+        List<Integer> sortedStabs = new ArrayList<>(stabValMap.keySet());
+        Collections.sort(sortedStabs);
+
+        // Step 3: Check for duplicate top values and find the max associated value
+        Integer result = null;
+        boolean duplicateFound = false;
+
+        for (int i = 0; i < sortedStabs.size() - 1; i++) {
+            if (sortedStabs.get(i).equals(sortedStabs.get(i + 1))) {
+                // Found duplicates; compute the max associated value
+                int currentVal = stabValMap.get(sortedStabs.get(i));
+                int nextVal = stabValMap.get(sortedStabs.get(i + 1));
+                result = Math.max(result != null ? result : 0, Math.max(currentVal, nextVal));
+                duplicateFound = true;
+            }
+        }
+
+        // Step 4: If no duplicate is found, pick the value associated with the smallest stab value
+        if (!duplicateFound) {
+            result = stabValMap.get(sortedStabs.get(0));
+        }
+
+        return result;
+    }
+}
