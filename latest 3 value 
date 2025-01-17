@@ -1,0 +1,34 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class StabValueProcessor {
+
+    public static void main(String[] args) {
+        // Input
+        Integer stab3 = 3, stab6 = 3, stab12 = 3;
+        int val3 = 30, val6 = 45, val12 = 40;
+
+        // Create a map of stab-value pairs
+        Map<Integer, Integer> stabValueMap = new HashMap<>();
+        if (stab3 != null) stabValueMap.put(stab3, val3);
+        if (stab6 != null) stabValueMap.put(stab6, val6);
+        if (stab12 != null) stabValueMap.put(stab12, val12);
+
+        // Handle duplicate stab values by keeping the maximum value
+        Map<Integer, Integer> processedMap = stabValueMap.entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        Math::max
+                ));
+
+        // Sort the map by stab values (keys) in ascending order
+        List<Map.Entry<Integer, Integer>> sortedList = new ArrayList<>(processedMap.entrySet());
+        sortedList.sort(Map.Entry.comparingByKey());
+
+        // Output the first value from the sorted list
+        Map.Entry<Integer, Integer> result = sortedList.get(0);
+        System.out.println("Selected Pair: (" + result.getKey() + ", " + result.getValue() + ")");
+    }
+}
