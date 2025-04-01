@@ -1,0 +1,6 @@
+Feature: Retrieve Config Values
+
+  Scenario: Get API Mapping
+    * def config = karate.callSingle('classpath:karate-config.js')
+    * def apiMapping = config.apiMapping
+    * def result = { apiMapping: apiMapping }
