@@ -1,31 +1,32 @@
+import com.intuit.karate.Runner;
 import com.intuit.karate.junit4.Karate;
-import com.intuit.karate.KarateOptions;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import java.util.Map;
-import com.intuit.karate.core.ScenarioEngine;
 
 @RunWith(Karate.class)
 public class TestRunner {
 
     @BeforeClass
     public static void beforeClass() {
-        // Get parameters from Jenkins environment variables
+        // Retrieve Jenkins parameters
         String apiName = System.getProperty("API_NAME", "defaultAPI");
         String url = System.getProperty("URL", "https://default.url");
 
-        // Load karate-config.js
-        Map<String, Object> config = ScenarioEngine.init().evalJs("karate-config.js").getAsMap();
+        // Run the Karate feature to get the config values
+        Map<String, Object> result = Runner.runFeature("classpath:helpers/configRetriever.feature", null, true);
 
-        // Retrieve feature file path based on API name
-        Map<String, String> apiMapping = (Map<String, String>) config.get("apiMapping");
+        // Extract API mapping
+        Map<String, String> apiMapping = (Map<String, String>) result.get("apiMapping");
+
+        // Get the feature file path from the mapping
         String featurePath = apiMapping.get(apiName);
 
         if (featurePath == null) {
             throw new RuntimeException("Feature file path not found for API: " + apiName);
         }
 
-        // Set the environment variables for Karate execution
+        // Set system properties for Karate execution
         System.setProperty("karate.env", "jenkins");
         System.setProperty("karate.apiUrl", url);
         System.setProperty("karate.featurePath", featurePath);
