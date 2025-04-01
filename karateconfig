@@ -1,0 +1,9 @@
+function fn() {
+    return {
+        apiMapping: {
+            "getUser": "classpath:features/getUser.feature",
+            "createOrder": "classpath:features/createOrder.feature",
+            "updateProfile": "classpath:features/updateProfile.feature"
+        }
+    };
+}
