@@ -1,0 +1,39 @@
+package tests;
+
+import com.intuit.karate.junit4.Karate;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+@RunWith(Parameterized.class)  // Use JUnit's Parameterized class for running multiple test sets
+public class TestRunner {
+
+    private String featurePath;
+    private String apiUrl;
+
+    // Constructor that will be used for injecting parameters
+    public TestRunner(String featurePath, String apiUrl) {
+        this.featurePath = featurePath;
+        this.apiUrl = apiUrl;
+    }
+
+    // Define parameters that will be passed to the test
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        // You can add as many feature-path and API-URL combinations as needed
+        return Arrays.asList(new Object[][] {
+            { "api_tests/login", "http://api.example.com" },
+            { "api_tests/register", "http://api.example2.com" }
+        });
+    }
+
+    // The test method that Karate will run
+    @Karate.Test
+    public Karate runTest() {
+        // Set the system property for API URL
+        System.setProperty("api.url", apiUrl);  // Karate will use this in its config files
+        return Karate.run(featurePath).relativeTo(getClass());  // Use the feature path for running tests
+    }
+}
