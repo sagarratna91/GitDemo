@@ -1,0 +1,20 @@
+function fn() {
+    var config = {};
+
+    // Mapping API Names to Feature File Paths
+    var apiMap = {
+        "GetUserAPI": "classpath:features/getUser.feature",
+        "CreateOrderAPI": "classpath:features/createOrder.feature"
+    };
+
+    // Read API_NAME from System Properties
+    var apiName = karate.properties['karate.apiName'];
+
+    // Assign feature file path from the map
+    config.featureFilePath = apiMap[apiName] || "classpath:features/default.feature";
+
+    // Read URL from System Properties
+    config.apiUrl = karate.properties['karate.apiUrl'];
+
+    return config;
+}
