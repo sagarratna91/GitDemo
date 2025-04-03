@@ -1,0 +1,44 @@
+import com.intuit.karate.Results;
+import com.intuit.karate.Runner;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.testng.annotations.Parameters;
+
+public class TestRunner {
+
+    private String featureFilePath;
+    private String apiUrl;
+
+    @BeforeClass
+    @Parameters({"API_NAME", "URL"})
+    public void beforeClass(String apiName, String url) {
+        // Set API Name and URL as System Properties
+        System.setProperty("karate.apiName", apiName);
+        System.setProperty("karate.apiUrl", url);
+
+        // Retrieve feature file path from karate-config.js
+        featureFilePath = System.getProperty("karate.featureFilePath");
+
+        // Debugging
+        System.out.println("API Name: " + apiName);
+        System.out.println("Feature File Path: " + featureFilePath);
+        System.out.println("API URL: " + url);
+    }
+
+    @Test
+    public void runKarateTests() {
+        if (featureFilePath == null || featureFilePath.isEmpty()) {
+            throw new RuntimeException("Feature file path is missing! Check karate-config.js.");
+        }
+
+        // Run the mapped feature file
+        Results results = Runner.path(featureFilePath)
+                .systemProperty("karate.apiUrl", apiUrl)
+                .parallel(1);
+
+        // Validate execution results
+        if (results.getFailCount() > 0) {
+            throw new RuntimeException("Karate tests failed!");
+        }
+    }
+}
